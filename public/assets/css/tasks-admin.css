@@ -1,0 +1,206 @@
+/* Styles spécifiques pour la gestion des tâches */
+
+.tasks-container {
+  padding: 20px;
+}
+
+/* Header avec bouton retour */
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Barre d'outils */
+.tasks-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.tasks-tools-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1;
+}
+
+.project-filter input {
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  width: 100%;
+  color: var(--text-color);
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.project-filter input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+/* Modal d'ajout de tâche */
+.task-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Styles pour la modal avec hauteur limitée et scroll */
+.modal-overlay .modal {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-overlay .modal .modal-body {
+  max-height: calc(
+    90vh - 130px
+  ); /* Soustraire la hauteur approximative du header et footer */
+  overflow-y: auto;
+
+  /* Cacher la scrollbar pour Chrome, Safari et Opera */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  /* Cacher la scrollbar pour Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+
+  /* Cacher la scrollbar pour IE et Edge */
+  -ms-overflow-style: none;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* Priorités des tâches */
+.low {
+  background-color: #d1e7dd;
+  color: #146c43;
+}
+
+.medium {
+  background-color: #cfe2ff;
+  color: #0a58ca;
+}
+
+.high {
+  background-color: #fff3cd;
+  color: #997404;
+}
+
+.immediate {
+  background-color: #f8d7da;
+  color: #b02a37;
+}
+
+/* Cellules du tableau pour les assignés et projets */
+table .user-info,
+table .project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+table .user-name,
+table .project-name {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+table .user-email {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Animation de chargement */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .task-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tasks-tools {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tasks-tools-left {
+    flex-direction: column;
+  }
+
+  .modal-overlay .modal .modal-body {
+    max-height: calc(90vh - 150px);
+  }
+}
+.modal-body {
+  padding: 24px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

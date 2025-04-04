@@ -1,0 +1,95 @@
+<context>
+You are an AI embed in a project that use:
+- PHP
+- PostgreSQL
+- HTML
+- CSS
+- JavaScript
+- Bootstrap
+</context>
+
+<project>
+# name of project
+company project management application.
+
+## overview
+
+Il s'agit d'une application de gestion de projets dans une entreprise. L'application sera utilisé uniquement par les membres de l'entreprise destinés à la réalisation des projets et des personnes qui seront chargées de l'administration de la plateforme.
+
+## key features
+
+### Authentification
+
+Les membres ou les administrateurs pourront se connecter à l'application en entrant leur username et leur mot de passe.
+
+### Gestion des projets
+
+Les administrateurs auront la possibilité de créer des projets avec des détails tels que(**nom du projet**, **description du projet**, **le client associé**(son nom, prénom, ville, numéro de téléphone), **le budget**, **les dates de début et de fin prévues**, **les dates de débuts et de fin actuelles**, **le type de projet**(e.g: developpement logiciel,etc...), **les documents**). Quant aux membres de l'entreprise destinés à la réalisation des projets, ils pourront uniquement voir les projets auxquels ils ont été confiés.
+
+### Gestion des equipes
+
+Une équipe est un ensemble de membres de l'entreprise destinés à la réalisation des projets. Les administrateurs auront la possibilité de créer des équipes avec des détails tels que (nom de l'équipe, description de l'équipe, les différents membres de l'équipe, le budget, les dates de début et de fin prévues, le type de projet(e.g: developpement logiciel,etc...)). Chaque équipe se verra attribuer un ou plusieurs projets.
+
+### Gestion des membres
+
+Les membres sont ceux chargés de la réalisation des projets. Ils peuvent faire partir de différentes équipes pour la réalisation d'un projet. Un membre est caractérisé par son nom, son prénom, son adresse-mail sa compétence(e.g: dev laravel, dev next.js, etc..). L'admin pourra ajouter, supprimer des membres.
+
+### Gestion des tâches
+
+Les membres de l'entreprise destinés à la réalisation des projets auront la possibilité de voir les tâches auxquelles ils ont été affectés.
+Les administrateurs auront la possibilité de créer des tâches avec des détails tels que (**nom de la tâche**, **description de la tâche**, **le projet associé**, **la priorité de la tâche**(high, medium, low, immediate), **le statut de la tâche**(To do, In progress, completed, delayed, cancelled), **la personne associée à la tâche**, les dates de debut et fin prévues et les dates de début et de fin actuelles, la personne qui a crée la tâche(un admin)).
+Les dates de début et de fin prévues concernant la tâche doivent être incluse entre les dates de début et de fin prévues concernant le projet auquel la tâche est associée.
+Les administrateurs pourront uniquement marquer le statut de la tâche comme **delayed** ou **cancelled** tandis que les personnes sur le projet pourrornt marquer comme **In progress** ou **completed**(la tâche créee est par défaut **To do**).
+Lorsque la personne en charge de la réalisation de la tâche comme en **In progress**, la date de début actuelle est ajoutée.
+Lorsqu'il est marqué comme **completed**, la date de fin est ajoutée.
+Pour toute modification du statut de la tâche une notification est envoyée.
+e.g: Lorsque l'administrateur marque la tâche comme **En retard**, une notification est envoyée à la personne en charge de réaliser cette tâche.
+e.g: Lorsque un membre modifie le statut d'une tâche, une nouvelle notification est envoyée à l'administrateur(la personne qui l'a ajoutée à cette tâche).
+
+### Gestion des notifications
+
+Une notification est caractérisée par les informations de celui qui l'a envoyée(**photo de profil**,**nom** et **prenom**), **le nom de la tâche**, **le nom du projet** et la date à laquelle elle a été envoyée.
+Une fois la tâche assignée à un membre de l'équipe(on doit se rassurer que ce membre appartient bien à l'equipe en charge de la réalisation du projet concernant cette tâche). une notification est envoyée à la personne chargée de réaliser la tâche. Lorsque l'administrateur marque la tâche comme **En retard**, une notification est envoyée à la personne en charge de réaliser cette tâche. Lorsque un membre modifie le statut d'une tâche, une nouvelle notification est envoyée à l'administrateur.
+
+### Gestion des utilisateurs et admins
+
+Par défaut il n'ya qu'un seul administrateur du site et c'est un superadmin(role = **"SUPER_ADMIN"**). Il aura la possibilité d'ajouter d'autres administrateurs(role = **"ADMIN"**) et les personnes en charges de la réalisation des projets qui sont de simples utilisateurs(role = **"USER"**). Pour ajouter un utilisateur, l'admin remplit toute ses informations lui concernant. Dès lors un username et un password(tous générés) sont envoyés à cette adresse email(email), il utilsera ceux-là pour se connecter à la plateforme(username et mot de passe sauvegardés dans la base de donnée). N.B: seul le superadmin a le droit d'ajouter(d emodifer ou de supprimer) des utilisateurs ou des administrateurs dans la plateforme. Un utilisateur pourra changer ses identifiants(username et password) et aussi ajouter une photo de profil.
+
+### Gestion des clients
+
+Les clients sont ceux pour qui les projets sont réalisés. Un client est caractérisé par son **nom**, **prénom**, **ville**, **résidence**, **numéro de téléphone**. Lors de l'ajout d'un projet le client y est associé.
+
+## Underlying stack
+
+**php**
+**bootstrap**
+**mvc**
+
+## Project structure
+
+Le projet utilise la structure MVC.
+
+**Fonctionnement du MVC:**
+
+1. **Modèle (Model)** (dossier **models**) :
+
+   - Représente les données de l'application.
+   - Interagit avec la base de données pour récupérer et sauvegarder des données.
+   - Contient la logique métier.
+
+2. **Vue (View)** (dossier **views**) :
+
+   - Responsable de l'affichage des données à l'utilisateur.
+   - Reçoit les données du contrôleur et les affiche sous forme de HTML.
+
+3. **Contrôleur (Controller)** (dossier **controllers**) :
+   - Reçoit les requêtes de l'utilisateur.
+   - Interagit avec le modèle pour traiter les données.
+   - Envoie les données à la vue pour affichage.
+
+**Autres dossiers**
+
+- **Dossier config**: Pour la configuration de l'application(database, api externes)
+- **Dossier public:** Pour les ressources
+
+</project>

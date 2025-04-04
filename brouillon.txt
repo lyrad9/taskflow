@@ -1,0 +1,140 @@
+-- Création de la base de données
+CREATE DATABASE gestion_projet;
+
+-- Connexion à la base de données
+\c gestion_projet
+
+-- Extension pour générer des UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Table des utilisateurs
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    profile_picture VARCHAR(255),
+    role VARCHAR(20) CHECK (role IN ('SUPER_ADMIN', 'ADMIN', 'USER')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des clients
+CREATE TABLE clients (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    city VARCHAR(100),
+    residence VARCHAR(255),
+    phone_number VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des compétences
+CREATE TABLE skills (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des utilisateurs et leurs compétences
+CREATE TABLE user_skills (
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    skill_id UUID REFERENCES skills(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, skill_id)
+);
+
+-- Table des projets
+CREATE TABLE projects (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    client_id UUID REFERENCES clients(id) ON DELETE SET NULL,
+    budget DECIMAL(15, 2),
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    project_type VARCHAR(100) NOT NULL,
+    documents TEXT[],
+    status VARCHAR(20) DEFAULT 'En cours' CHECK (status IN ('En attente', 'En cours', 'Terminé', 'Annulé')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des équipes
+CREATE TABLE teams (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    budget DECIMAL(15, 2),
+    start_date DATE,
+    end_date DATE,
+    project_type VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des membres d'équipe
+CREATE TABLE team_members (
+    team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (team_id, user_id)
+);
+
+-- Table pour lier les équipes aux projets
+CREATE TABLE team_projects (
+    team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (team_id, project_id)
+);
+
+-- Table des tâches
+CREATE TABLE tasks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    assigned_to UUID REFERENCES users(id) ON DELETE SET NULL,
+    priority VARCHAR(20) CHECK (priority IN ('haute', 'moyenne', 'faible')),
+    status VARCHAR(20) DEFAULT 'A faire' CHECK (status IN ('A faire', 'En cours', 'Terminée', 'En retard')),
+    completion_date TIMESTAMP,
+    created_by UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des notifications
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    sender_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    recipient_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Création d'un utilisateur SUPER_ADMIN par défaut
+INSERT INTO users (username, password, email, first_name, last_name, role)
+VALUES (
+    'admin', 
+    -- Mot de passe haché (à remplacer par un vrai hachage lors de l'implémentation)
+    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    'admin@example.com',
+    'Super',
+    'Admin',
+    'SUPER_ADMIN'
+);
+
+-- Création d'index pour optimiser les performances
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_tasks_status ON tasks(status);
+CREATE INDEX idx_tasks_project ON tasks(project_id);
+CREATE INDEX idx_tasks_assigned_to ON tasks(assigned_to);
+CREATE INDEX idx_team_members_user ON team_members(user_id);
+CREATE INDEX idx_notifications_recipient ON notifications(recipient_id);

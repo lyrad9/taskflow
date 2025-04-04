@@ -1,0 +1,42 @@
+<?php
+class Router {
+    private $routes = [];
+
+    public function addRoute($route, $controllerAction) {
+        $this->routes[$route] = $controllerAction;
+    }
+
+    public function dispatch() {
+        /* $uri = ($_SERVER['REQUEST_URI'] === "/") ? "auth/login" : trim($_SERVER['REQUEST_URI'], '/'); */
+        $uri = trim($_SERVER['REQUEST_URI'], '/');        
+        $uri = explode('?', $uri)[0]; // Ignorer les paramètres de requête
+
+        if (array_key_exists($uri, $this->routes)) {
+            list($controllerName, $action) = explode('@', $this->routes[$uri]);
+            $controllerFile = 'app/controllers/' . $controllerName . '.php';
+
+            if (file_exists($controllerFile)) {
+                require_once $controllerFile;
+                $controller = new $controllerName();
+                $controller->$action();
+            } else {
+                echo "Controller not found!";
+            }
+        } else {
+            require_once 'app/views/404.php';
+        }
+    }
+}
+?>
+
+
+:root {
+  --primary: #4e73df;
+  --secondary: #858796;
+  --success: #1cc88a;
+  --info: #36b9cc;
+  --warning: #f6c23e;
+  --danger: #e74a3b;
+  --light: #f8f9fc;
+  --dark: #5a5c69;
+}

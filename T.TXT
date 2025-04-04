@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Ajouter un projet - TASKFLOW</title>
+  
+  <!-- Custom fonts -->
+  <link href="/public/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  
+  <!-- Custom styles -->
+  <link href="/public/assets/css/add-project.admin.css" rel="stylesheet">
+</head>
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <?php include 'includes/sidebar.php'; ?>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <?php include 'includes/topbar.php'; ?>
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Header -->
+          <div class="page-header">
+            <div class="d-flex align-items-center mb-4">
+              <a href="/admin/projects" class="btn btn-circle btn-sm btn-light mr-3">
+                <i class="fas fa-arrow-left"></i>
+              </a>
+              <h1 class="h3 mb-0 text-gray-800">Ajouter un projet</h1>
+            </div>
+            <p>Créez un nouveau projet en remplissant le formulaire ci-dessous. Tous les champs marqués d'un astérisque (*) sont obligatoires.</p>
+          </div>
+
+          <!-- Project Form -->
+          <form action="/admin/projects/add" method="post" enctype="multipart/form-data" id="projectForm">
+            <div class="card form-card shadow mb-4">
+              <div class="card-header">
+                Informations du projet
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="projectName" class="form-label required">Nom du projet</label>
+                      <input type="text" class="form-control" id="projectName" name="name" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="projectType" class="form-label required">Type de projet</label>
+                      <select class="form-select" id="projectType" name="project_type" required>
+                        <option value="" selected disabled>Sélectionner un type...</option>
+                        <?php foreach (Constants::PROJECT_TYPES as $key => $value): ?>
+                          <option value="<?php echo htmlspecialchars($key); ?>"><?php echo htmlspecialchars($value); ?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="projectDescription" class="form-label required">Description du projet</label>
+                  <textarea class="form-control" id="projectDescription" name="description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="projectBudget" class="form-label required">Budget (FCFA)</label>
+                  <input type="number" class="form-control" id="projectBudget" name="budget" min="0" required>
+                  <small class="form-text">Le budget total alloué pour ce projet.</small>
+                </div>
+                <div class="date-range-container">
+                  <div class="form-group">
+                    <label for="scheduledStartDate" class="form-label required">Date de début prévue</label>
+                    <input type="date" class="form-control" id="scheduledStartDate" name="scheduled_start_date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="scheduledEndDate" class="form-label required">Date de fin prévue</label>
+                    <input type="date" class="form-control" id="scheduledEndDate" name="scheduled_end_date" required>
+                    <div class="invalid-feedback" id="dateRangeError">La date de fin doit être ultérieure à la date de début.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Client Section -->
+            <div class="card form-card shadow mb-4">
+              <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span>Client associé</span>
+                  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addClientModal">
+                    <i class="fas fa-plus fa-sm"></i> Ajouter un client
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="client-select-container">
+                  <div class="client-select-tabs">
+                    <div class="client-select-tab active" data-tab="existing">Client existant</div>
+                    <div class="client-select-tab" data-tab="new">Nouveau client</div>
+                  </div>
+                  <div class="client-select-content">
+                    <div class="tab-pane active" id="existingClient">
+                      <div class="form-group">
+                        <label for="clientId" class="form-label required">Sélectionner un client</label>
+                        <select class="form-select" id="clientId" name="client_id" required>
+                          <option value="" selected disabled>Choisir un client...</option>
+                          <?php if (isset($data['clients']) && !empty($data['clients'])): ?>
+                            <?php foreach ($data['clients'] as $client): ?>
+                              <option value="<?php echo htmlspecialchars($client['id']); ?>">
+                                <?php echo htmlspecialchars($client['first_name'] . ' ' . $client['last_name'] . ' - ' . $client['phone_number']); ?>
+                              </option>
+                            <?php endforeach; ?>
+                          <?php endif; ?>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="newClient" style="display: none;">
+                      <div class="client-form-inline">
+                        <div class="form-group">
+                          <label for="clientFirstName" class="form-label required">Prénom</label>
+                          <input type="text" class="form-control" id="clientFirstName" name="client_first_name">
+                        </div>
+                        <div class="form-group">
+                          <label for="clientLastName" class="form-label required">Nom</label>
+                          <input type="text" class="form-control" id="clientLastName" name="client_last_name">
+                        </div>
+                      </div>
+                      <div class="client-form-inline">
+                        <div class="form-group">
+                          <label for="clientCity" class="form-label required">Ville</label>
+                          <input type="text" class="form-control" id="clientCity" name="client_city">
+                        </div>
+                        <div class="form-group">
+                          <label for="clientResidence" class="form-label">Résidence</label>
+                          <input type="text" class="form-control" id="clientResidence" name="client_residence">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="clientPhoneNumber" class="form-label required">Numéro de téléphone</label>
+                        <input type="tel" class="form-control" id="clientPhoneNumber" name="client_phone_number">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="card form-card shadow mb-4">
+              <div class="card-header">
+                Équipe assignée
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="teamId" class="form-label required">Sélectionner une équipe</label>
+                  <select class="form-select" id="teamId" name="team_id" required>
+                    <option value="" selected disabled>Choisir une équipe...</option>
+                    <?php if (isset($data['teams']) && !empty($data['teams'])): ?>
+                      <?php foreach ($data['teams'] as $team): ?>
+                        <option value="<?php echo htmlspecialchars($team['id']); ?>">
+                          <?php echo htmlspecialchars($team['name']); ?>
+                          (<?php echo htmlspecialchars($team['members_count']); ?> membres)
+                        </option>
+                      <?php endforeach; ?>
+                    <?php endif; ?>
+                  </select>
+                </div>
+                <div class="team-members-container" id="teamMembersContainer" style="display: none;">
+                  <label class="form-label">Membres de l'équipe</label>
+                  <div class="team-member-list" id="teamMembersList">
+                    <!-- Team members will be loaded here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents Section -->
+            <div class="card form-card shadow mb-4">
+              <div class="card-header">
+                Documents du projet
+              </div>
+              <div class="card-body">
+                <div class="file-upload">
+                  <input type="file" id="projectDocuments" name="documents[]" class="file-upload-input" multiple>
+                  <label for="projectDocuments" class="file-upload-label">
+                    <span id="fileUploadText">Choisir des fichiers</span>
+                  </label>
+                  <div class="file-upload-info">
+                    Formats acceptés: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (max. 10 Mo)
+                  </div>
+                </div>
+                <div class="uploaded-files" id="uploadedFiles">
+                  <!-- Preview of uploaded files will appear here -->
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin/projects'">Annuler</button>
+              <button type="submit" class="btn btn-primary btn-icon">
+                <i class="fas fa-save"></i> Enregistrer le projet
+              </button>
+            </div>
+          </form>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; TASKFLOW 2023</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Add Client Modal-->
+  <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClientModalLabel">Ajouter un nouveau client</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <form id="addClientForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="modalClientFirstName" class="form-label required">Prénom</label>
+              <input type="text" class="form-control" id="modalClientFirstName" name="first_name" required>
+            </div>
+            <div class="form-group">
+              <label for="modalClientLastName" class="form-label required">Nom</label>
+              <input type="text" class="form-control" id="modalClientLastName" name="last_name" required>
+            </div>
+            <div class="form-group">
+              <label for="modalClientCity" class="form-label required">Ville</label>
+              <input type="text" class="form-control" id="modalClientCity" name="city" required>
+            </div>
+            <div class="form-group">
+              <label for="modalClientResidence" class="form-label">Résidence</label>
+              <input type="text" class="form-control" id="modalClientResidence" name="residence">
+            </div>
+            <div class="form-group">
+              <label for="modalClientPhoneNumber" class="form-label required">Numéro de téléphone</label>
+              <input type="tel" class="form-control" id="modalClientPhoneNumber" name="phone_number" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/public/assets/js/jquery.min.js"></script>
+  <script src="/public/assets/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/public/assets/js/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts -->
+  <script>
+    // Client tab toggling
+    document.querySelectorAll('.client-select-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        document.querySelectorAll('.client-select-tab').forEach(function(t) {
+          t.classList.remove('active');
+        });
+        
+        // Add active class to clicked tab
+        this.classList.add('active');
+        
+        // Hide all tab panes
+        document.querySelectorAll('.tab-pane').forEach(function(pane) {
+          pane.style.display = 'none';
+        });
+        
+        // Show selected tab pane
+        const tabId = this.getAttribute('data-tab');
+        if (tabId === 'existing') {
+          document.getElementById('existingClient').style.display = 'block';
+          document.getElementById('clientId').setAttribute('required', 'required');
+          document.getElementById('clientFirstName').removeAttribute('required');
+          document.getElementById('clientLastName').removeAttribute('required');
+          document.getElementById('clientCity').removeAttribute('required');
+          document.getElementById('clientPhoneNumber').removeAttribute('required');
+        } else {
+          document.getElementById('newClient').style.display = 'block';
+          document.getElementById('clientId').removeAttribute('required');
+          document.getElementById('clientFirstName').setAttribute('required', 'required');
+          document.getElementById('clientLastName').setAttribute('required', 'required');
+          document.getElementById('clientCity').setAttribute('required', 'required');
+          document.getElementById('clientPhoneNumber').setAttribute('required', 'required');
+        }
+      });
+    });
+
+    // Date validation
+    const startDateInput = document.getElementById('scheduledStartDate');
+    const endDateInput = document.getElementById('scheduledEndDate');
+    const dateRangeError = document.getElementById('dateRangeError');
+    
+    function validateDateRange() {
+      if (startDateInput.value && endDateInput.value) {
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+        
+        if (endDate < startDate) {
+          endDateInput.classList.add('is-invalid');
+          dateRangeError.style.display = 'block';
+          return false;
+        } else {
+          endDateInput.classList.remove('is-invalid');
+          dateRangeError.style.display = 'none';
+          return true;
+        }
+      }
+      return true;
+    }
+    
+    startDateInput.addEventListener('change', validateDateRange);
+    endDateInput.addEventListener('change', validateDateRange);
+    
+    // Form validation
+    document.getElementById('projectForm').addEventListener('submit', function(e) {
+      if (!validateDateRange()) {
+        e.preventDefault();
+      }
+    });
+    
+    // File upload preview
+    document.getElementById('projectDocuments').addEventListener('change', function(e) {
+      const fileUploadText = document.getElementById('fileUploadText');
+      const uploadedFiles = document.getElementById('uploadedFiles');
+      uploadedFiles.innerHTML = '';
+      
+      if (this.files.length > 0) {
+        fileUploadText.textContent = `${this.files.length} fichier(s) sélectionné(s)`;
+        
+        for (let i = 0; i < this.files.length; i++) {
+          const file = this.files[i];
+          const fileSize = (file.size / 1024).toFixed(2);
+          const fileExtension = file.name.split('.').pop().toLowerCase();
+          
+          let iconClass = 'fa-file';
+          
+          // Set appropriate icon based on file extension
+          if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+            iconClass = 'fa-file-image';
+          } else if (['pdf'].includes(fileExtension)) {
+            iconClass = 'fa-file-pdf';
+          } else if (['doc', 'docx'].includes(fileExtension)) {
+            iconClass = 'fa-file-word';
+          } else if (['xls', 'xlsx'].includes(fileExtension)) {
+            iconClass = 'fa-file-excel';
+          }
+          
+          const fileItem = document.createElement('div');
+          fileItem.className = 'uploaded-file';
+          fileItem.innerHTML = `
+            <div class="uploaded-file-icon">
+              <i class="fas ${iconClass}"></i>
+            </div>
+            <div class="uploaded-file-info">
+              <div class="uploaded-file-name">${file.name}</div>
+              <div class="uploaded-file-size">${fileSize} KB</div>
+            </div>
+            <div class="uploaded-file-remove" onclick="removeFile(${i})">
+              <i class="fas fa-times"></i>
+            </div>
+          `;
+          
+          uploadedFiles.appendChild(fileItem);
+        }
+      } else {
+        fileUploadText.textContent = 'Choisir des fichiers';
+      }
+    });
+    
+    function removeFile(index) {
+      const input = document.getElementById('projectDocuments');
+      const dt = new DataTransfer();
+      
+      for (let i = 0; i < input.files.length; i++) {
+        if (i !== index) {
+          dt.items.add(input.files[i]);
+        }
+      }
+      
+      input.files = dt.files;
+      
+      // Trigger change event to update the preview
+      const event = new Event('change');
+      input.dispatchEvent(event);
+    }
+    
+    // Team members loading
+    document.getElementById('teamId').addEventListener('change', function() {
+      const teamId = this.value;
+      if (teamId) {
+        // In a real app, you would fetch team members via AJAX
+        // For now, we'll just show the container with a message
+        document.getElementById('teamMembersContainer').style.display = 'block';
+        document.getElementById('teamMembersList').innerHTML = '<div class="p-3 text-center">Chargement des membres de l\'équipe...</div>';
+        
+        // Simulate loading team members (in a real app, this would be an AJAX call)
+        setTimeout(function() {
+          // Sample data - in a real app, this would come from your server
+          const teamMembers = [
+            { id: 1, name: 'Jean Dupont', role: 'Développeur Frontend', avatar: '/public/static/user1.jpg' },
+            { id: 2, name: 'Marie Martin', role: 'Designer UI/UX', avatar: '/public/static/user2.jpg' },
+            { id: 3, name: 'Pierre Dubois', role: 'Développeur Backend', avatar: '/public/static/user3.jpg' }
+          ];
+          
+          const membersList = document.getElementById('teamMembersList');
+          membersList.innerHTML = '';
+          
+          teamMembers.forEach(function(member) {
+            const memberItem = document.createElement('div');
+            memberItem.className = 'team-member-item';
+            memberItem.innerHTML = `
+              <div class="team-member-avatar">
+                <img src="${member.avatar}" alt="${member.name}">
+              </div>
+              <div class="team-member-info">
+                <div class="team-member-name">${member.name}</div>
+                <div class="team-member-role">${member.role}</div>
+              </div>
+            `;
+            
+            membersList.appendChild(memberItem);
+          });
+        }, 1000);
+      } else {
+        document.getElementById('teamMembersContainer').style.display = 'none';
+      }
+    });
+    
+    // Add client modal form submission
+    document.getElementById('addClientForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // In a real app, you would submit the form via AJAX and add the new client to the select
+      // For now, we'll just simulate a successful submission
+      
+      alert('Client ajouté avec succès !');
+      
+      // Close the modal
+      $('#addClientModal').modal('hide');
+      
+      // Reset the form
+      this.reset();
+    });
+    
+    // Toggle sidebar
+    document.getElementById("sidebarToggle").addEventListener("click", function(e) {
+      e.preventDefault();
+      document.body.classList.toggle("sidebar-toggled");
+      document.querySelector(".sidebar").classList.toggle("toggled");
+    });
+    
+    // Scroll to top button appear
+    document.addEventListener("scroll", function() {
+      var scrollToTop = document.querySelector(".scroll-to-top");
+      if (document.documentElement.scrollTop > 100) {
+        scrollToTop.style.display = "block";
+      } else {
+        scrollToTop.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+/* Import de la feuille de style de base */
+@import url("/public/assets/css/main-dashboard.admin.css");
+
+/* Styles spécifiques à la page de détails de projet */
+
+/* Header du projet */
+.project-header {
+  background-color: #f8f9fc;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.project-header .project-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.project-header .project-title h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #4e73df;
+}
+
+.project-badge {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+  border-radius: 2rem;
+}
+
+/* Section client */
+.client-info {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+.client-info .client-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #f1f1f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-right: 1.5rem;
+  color: #4e73df;
+}
+
+.client-info .client-details {
+  flex: 1;
+}
+
+.client-info .client-details h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.client-info .client-details p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  color: #6e707e;
+}
+
+.client-info .client-details .contact-info {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.client-info .client-details .contact-info a {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;
+  color: #4e73df;
+  text-decoration: none;
+}
+
+.client-info .client-details .contact-info a i {
+  margin-right: 0.25rem;
+}
+
+/* Onglets de navigation */
+.project-tabs {
+  margin-bottom: 1.5rem;
+}
+
+.project-tabs .nav-tabs {
+  border-bottom: 1px solid #e3e6f0;
+}
+
+.project-tabs .nav-tabs .nav-item {
+  margin-bottom: -1px;
+}
+
+.project-tabs .nav-tabs .nav-link {
+  border: 1px solid transparent;
+  border-top-left-radius: 0.35rem;
+  border-top-right-radius: 0.35rem;
+  color: #6e707e;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+}
+
+.project-tabs .nav-tabs .nav-link:hover {
+  border-color: #e3e6f0 #e3e6f0 #e3e6f0;
+  color: #4e73df;
+}
+
+.project-tabs .nav-tabs .nav-link.active {
+  color: #4e73df;
+  background-color: #fff;
+  border-color: #e3e6f0 #e3e6f0 #fff;
+  font-weight: 600;
+}
+
+.project-tabs .tab-content {
+  padding: 1.5rem;
+  background-color: #fff;
+  border: 1px solid #e3e6f0;
+  border-top: none;
+  border-bottom-left-radius: 0.35rem;
+  border-bottom-right-radius: 0.35rem;
+}
+
+/* Informations du projet */
+.project-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1.5rem;
+}
+
+.project-info .info-item {
+  margin-bottom: 1rem;
+}
+
+.project-info .info-label {
+  font-size: 0.85rem;
+  color: #6e707e;
+  margin-bottom: 0.25rem;
+}
+
+.project-info .info-value {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Description du projet */
+.project-description {
+  margin-bottom: 1.5rem;
+}
+
+.project-description h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #4e73df;
+}
+
+.project-description p {
+  line-height: 1.6;
+  color: #5a5c69;
+}
+
+/* Documents du projet */
+.project-documents {
+  margin-bottom: 1.5rem;
+}
+
+.project-documents h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #4e73df;
+}
+
+.document-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 1rem;
+}
+
+.document-item {
+  border: 1px solid #e3e6f0;
+  border-radius: 0.35rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.document-item:hover {
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  transform: translateY(-2px);
+}
+
+.document-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #4e73df;
+}
+
+.document-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  word-break: break-word;
+}
+
+.document-size {
+  font-size: 0.75rem;
+  color: #6e707e;
+  margin-bottom: 0.5rem;
+}
+
+.document-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.document-actions a {
+  background-color: #f8f9fc;
+  color: #4e73df;
+  border: 1px solid #e3e6f0;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.document-actions a:hover {
+  background-color: #4e73df;
+  color: #fff;
+}
+
+/* Équipe du projet */
+.project-team {
+  margin-bottom: 1.5rem;
+}
+
+.project-team h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #4e73df;
+}
+
+.team-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 1rem;
+}
+
+.team-member {
+  border: 1px solid #e3e6f0;
+  border-radius: 0.35rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.team-member-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.team-member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-member-avatar i {
+  font-size: 1.5rem;
+  color: #4e73df;
+}
+
+.team-member-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.team-member-role {
+  font-size: 0.75rem;
+  color: #6e707e;
+  margin-bottom: 0.5rem;
+}
+
+.team-member-contact {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.team-member-contact a {
+  color: #4e73df;
+  font-size: 0.85rem;
+}
+
+/* Tâches du projet */
+.project-tasks {
+  margin-bottom: 1.5rem;
+}
+
+.project-tasks h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #4e73df;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-tasks h3 .btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+}
+
+.task-table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.task-table th,
+.task-table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+.task-table th {
+  background-color: #f8f9fc;
+  font-weight: 600;
+  color: #4e73df;
+}
+
+.task-priority {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.task-priority.high {
+  background-color: #e74a3b;
+}
+
+.task-priority.medium {
+  background-color: #f6c23e;
+}
+
+.task-priority.low {
+  background-color: #1cc88a;
+}
+
+.task-priority.immediate {
+  background-color: #e74a3b;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(231, 74, 59, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(231, 74, 59, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(231, 74, 59, 0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .project-info {
+    grid-template-columns: 1fr;
+  }
+
+  .client-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .client-info .client-avatar {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .client-info .client-details .contact-info {
+    justify-content: center;
+  }
+
+  .document-list,
+  .team-members {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
